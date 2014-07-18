@@ -17,7 +17,7 @@
  *      - WP_CONTENT_URL
  *      - Convenient Varaibles
  */
-use Ixa\WordPress\Configuration\Config;
+use Artprima\WordPress\Ixa\Configuration\Config;
 
 require_once '../vendor/autoload.php';
 
