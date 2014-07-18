@@ -1,5 +1,5 @@
 {
-    "name": "ixa/wp-config",
+    "name": "artprima/ixa-wp-config",
     "description": "WordPress Configurator Alternative",
     "type": "library",
     "require": {
@@ -10,9 +10,12 @@
         {
             "name": "Cesar Hernandez",
             "email": "mrshortcuts@gmail.com"
+        },
+        {
+            "name": "Denis Voytyuk"
         }
     ],
     "autoload": {
-         "psr-4": {"Ixa\\WordPress\\": "src/"}
+         "psr-4": {"Artprima\\WordPress\\Ixa\\": "src/"}
     }
 }
