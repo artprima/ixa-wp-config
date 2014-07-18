@@ -1,6 +1,6 @@
 <?php
 
-namespace Ixa\WordPress\Configuration;
+namespace Artprima\WordPress\Ixa\Configuration;
 
 
 interface ConfigLoaderInterface

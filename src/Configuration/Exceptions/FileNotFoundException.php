@@ -1,6 +1,6 @@
 <?php
 
-namespace Ixa\WordPress\Configuration\Exceptions;
+namespace Artprima\WordPress\Ixa\Configuration\Exceptions;
 
 
 class FileNotFoundException extends \Exception{

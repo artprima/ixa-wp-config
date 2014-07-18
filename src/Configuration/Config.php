@@ -1,9 +1,9 @@
 <?php
 
-namespace Ixa\WordPress\Configuration;
+namespace Artprima\WordPress\Ixa\Configuration;
 
-class Config{
-
+class Config
+{
     protected $dir;
     protected $loaders;
 
@@ -12,7 +12,8 @@ class Config{
         'environment' => 'Ixa\WordPress\Configuration\EnvironmentConfig'
     );
 
-    public function __construct($dir){
+    public function __construct($dir)
+    {
         $this->setDir($dir);
         $this->bindDefaultLoaders();
     }
@@ -22,7 +23,8 @@ class Config{
      * Call all registered Config Loaders
      * @return void 
      */
-    public function load(){
+    public function load()
+    {
         foreach ($this->loaders as $loader){
             $loader->load();
             $loader->save();
@@ -30,12 +32,14 @@ class Config{
     }
 
 
-    public function getDir(){
+    public function getDir()
+    {
         return $this->dir;
     }
 
 
-    public function bind($name, $function){
+    public function bind($name, $function)
+    {
         $this->addLoader($name, call_user_func($function, $this->getDir()));
     }
 
@@ -44,7 +48,8 @@ class Config{
      * @param string $name
      * @return \Ixa\WordPress\Configuration\ConfigLoaderInterface
      */
-    public function getLoader($name){
+    public function getLoader($name)
+    {
         return $this->loaders[$name];
     }
 
@@ -52,21 +57,23 @@ class Config{
      * @param string $name
      * @param ConfigLoaderInterface $obj
      */
-    protected function addLoader($name, ConfigLoaderInterface $obj){
+    protected function addLoader($name, ConfigLoaderInterface $obj)
+    {
         $this->loaders[$name] = $obj;
     }
 
-    public function setDir($dir){
+    public function setDir($dir)
+    {
         $this->dir = rtrim($dir, '/') . '/';
     }
 
-    protected function bindDefaultLoaders(){
+    protected function bindDefaultLoaders()
+    {
         $this->loaders = array();
 
         foreach (self::$defaultLoaders as $key => $clazz) {
             $this->addLoader($key, new $clazz($this->getDir()));
         }
     }
-
 
 }

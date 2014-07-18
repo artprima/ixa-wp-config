@@ -1,8 +1,8 @@
 <?php
 
-namespace Ixa\WordPress\Configuration;
+namespace Artprima\WordPress\Ixa\Configuration;
 
-use Ixa\WordPress\Configuration\Exceptions\FileNotFoundException;
+use Artprima\WordPress\Ixa\Configuration\Exceptions\FileNotFoundException;
 
 use Symfony\Component\Yaml\Parser;
 
