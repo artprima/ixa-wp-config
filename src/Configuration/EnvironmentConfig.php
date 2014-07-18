@@ -43,9 +43,8 @@ class EnvironmentConfig implements ConfigLoaderInterface
     public function __construct($dir, $fileName = null){
         $this->setDir($dir);
         $this->setFileName($fileName);
-
-
         $this->setParser(new Parser());
+        $this->params = new \ArrayIterator();
     }
 
 
@@ -75,12 +74,6 @@ class EnvironmentConfig implements ConfigLoaderInterface
      * @return void
      */
     public function save(){
-        foreach ($this->getParams() as $key => $value) {
-
-            $constant = strtoupper($key);
-
-            if(! defined($constant)) define($constant, $value);
-        }
     }
 
 
@@ -112,16 +105,10 @@ class EnvironmentConfig implements ConfigLoaderInterface
      */
     public function setParams(array $params)
     {
-        /*
-        if(array_key_exists(self::PARAMS_KEY, $params) && is_array($params[self::PARAMS_KEY])){
-            $this->params = array_intersect_key(
-                $params[self::PARAMS_KEY], 
-                array_flip(self::$validKeys)
-            );
-        }*/
-
-        $object = new \ArrayObject($params);
-        $this->params = $object->getIterator();
+        if (array_key_exists(self::PARAMS_KEY, $params) && is_array($params[self::PARAMS_KEY])) {
+            $object = new \ArrayObject($params[self::PARAMS_KEY]);
+            $this->params = $object->getIterator();
+        }
     }
 
 
