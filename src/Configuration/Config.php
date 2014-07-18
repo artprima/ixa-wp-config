@@ -9,7 +9,7 @@ class Config
 
 
     protected static $defaultLoaders = array(
-        'environment' => 'Artprima\WordPress\Ixa\Configuration\EnvironmentConfig'
+        'environment' => 'Artprima\WordPress\Ixa\Configuration\EnvironmentConfig',
     );
 
     public function __construct($dir)
