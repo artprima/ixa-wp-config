@@ -3,28 +3,34 @@
 namespace Ixa\WordPress\Configuration;
 
 
-interface ConfigLoader{
+interface ConfigLoaderInterface
+{
 
-	function __construct($dir, $filename = null);
+    function __construct($dir, $filename = null);
 
-	/**
-	 * Load
-	 * Parse and save file into $this->params
-	 * @return void
-	 */
-	function load();
+    /**
+     * Load
+     * Parse and save file into $this->params
+     * @return void
+     */
+    function load();
 
-	/**
-	 * Save
-	 * Register all params as constants
-	 * @return void
-	 */
-	function save();
+    /**
+     * Save
+     * Register all params as constants
+     * @return void
+     */
+    function save();
 
-	function getParams();
+    /**
+     * @return \ArrayIterator
+     */
+    function getParams();
 
-	function getFileName();
+    function getParam($name, $default = null);
 
-	function getDir();
+    function getFileName();
+
+    function getDir();
 
 }

@@ -6,119 +6,149 @@ use Ixa\WordPress\Configuration\Exceptions\FileNotFoundException;
 
 use Symfony\Component\Yaml\Parser;
 
+class EnvironmentConfig implements ConfigLoaderInterface
+{
+    const EXT = '.yml';
+    const DEFAULT_FILE_NAME = '.env';
 
-class EnvironmentConfig implements ConfigLoader{
+    const PARAMS_KEY = 'parameters';
 
-	const EXT = '.yml';
-	const DEFAULT_FILE_NAME = '.env';
+    /*
+    static $validKeys = array(
+        'auth_key',
+        'secure_auth_key',
+        'logged_in_key',
+        'nonce_key',
+        'auth_salt',
+        'secure_auth_salt',
+        'logged_in_salt',
+        'nonce_salt',
+        'environment',
+        'db_user',
+        'db_name',
+        'db_host',
+        'db_password',
+        'wp_home'
+    );
+    */
 
-	const PARAMS_KEY = 'parameters';
+    protected $dir;
+    protected $fileName;
 
-	static $validKeys = array(
-		'auth_key',
-		'secure_auth_key',
-		'logged_in_key',
-		'nonce_key',
-		'auth_salt',
-		'secure_auth_salt',
-		'logged_in_salt',
-		'nonce_salt',
-		'environment',
-		'db_user',
-		'db_name',
-		'db_host',
-		'db_password',
-		'wp_home'
-	);
+    /**
+     * @var \ArrayIterator
+     */
+    protected $params;
 
-	protected $dir;
-	protected $fileName;
-
-	protected $params;
-
-	public function __construct($dir, $fileName = null){
-		$this->setDir($dir);
-		$this->setFileName($fileName);
-
-
-		$this->params = array();
-		$this->setParser(new Parser());
-	}
-
-
-	/**
-	 * Load
-	 * Parse and save file into $this->params
-	 * @return void
-	 */
-	function load(){
-
-		$path = $this->getFilePath();
-
-		if(! file_exists($path)){
-			throw new FileNotFoundException('Environment', $path);
-		}
-
-		$content = file_get_contents($this->getFilePath());
-
-		$this->setParams($this->parser->parse($content));
-	}
+    public function __construct($dir, $fileName = null){
+        $this->setDir($dir);
+        $this->setFileName($fileName);
 
 
-	/**
-	 * Save
-	 * Register all params as constants
-	 * @return void
-	 */
-	function save(){
-		foreach ($this->getParams() as $key => $value) {
-
-			$constant = strtoupper($key);
-
-			if(! defined($constant)) define($constant, $value);
-		}
-	}
+        $this->setParser(new Parser());
+    }
 
 
-	function getFilePath(){
-		return $this->getDir() . $this->getFileName();
-	}
+    /**
+     * Load
+     * Parse and save file into $this->params
+     * @throws Exceptions\FileNotFoundException
+     * @return void
+     */
+    public function load(){
 
-	function getParams(){
-		return $this->params;
-	}
+        $path = $this->getFilePath();
 
+        if(! file_exists($path)){
+            throw new FileNotFoundException('Environment', $path);
+        }
 
-	function setParams(array $params){
-		if(array_key_exists(self::PARAMS_KEY, $params) && is_array($params[self::PARAMS_KEY])){
-			$this->params = array_intersect_key(
-				$params[self::PARAMS_KEY], 
-				array_flip(self::$validKeys)
-			);
-		}
-	}
+        $content = file_get_contents($this->getFilePath());
 
-
-	function getFileName(){
-		$name = ($this->fileName) ? $this->fileName : self::DEFAULT_FILE_NAME;
-		return $name . self::EXT;
-	}
+        $this->setParams($this->parser->parse($content));
+    }
 
 
-	function getDir(){
-		return $this->dir;
-	}
+    /**
+     * Save
+     * Register all params as constants
+     * @return void
+     */
+    public function save(){
+        foreach ($this->getParams() as $key => $value) {
+
+            $constant = strtoupper($key);
+
+            if(! defined($constant)) define($constant, $value);
+        }
+    }
 
 
-	function setParser(Parser $parser){
-		$this->parser = $parser;
-	}
+    public function getFilePath()
+    {
+        return $this->getDir() . $this->getFileName();
+    }
 
-	protected function setDir($dir){
-		$this->dir = $dir;
-	}
+    /**
+     * @return \ArrayIterator
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
 
-	protected function setFileName($fileName){
-		$this->fileName = $fileName;
-	}
+    public function getParam($name, $default = null)
+    {
+        $value = $default;
+        if ($this->params->offsetExists($name)) {
+            $value = $this->params->offsetGet($name);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @param array $params
+     */
+    public function setParams(array $params)
+    {
+        /*
+        if(array_key_exists(self::PARAMS_KEY, $params) && is_array($params[self::PARAMS_KEY])){
+            $this->params = array_intersect_key(
+                $params[self::PARAMS_KEY], 
+                array_flip(self::$validKeys)
+            );
+        }*/
+
+        $object = new \ArrayObject($params);
+        $this->params = $object->getIterator();
+    }
+
+
+    public function getFileName()
+    {
+        $name = ($this->fileName) ? $this->fileName : self::DEFAULT_FILE_NAME;
+        return $name . self::EXT;
+    }
+
+    public function getDir()
+    {
+        return $this->dir;
+    }
+
+
+    public function setParser(Parser $parser)
+    {
+        $this->parser = $parser;
+    }
+
+    protected function setDir($dir)
+    {
+        $this->dir = $dir;
+    }
+
+    protected function setFileName($fileName)
+    {
+        $this->fileName = $fileName;
+    }
 }
