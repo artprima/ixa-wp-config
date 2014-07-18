@@ -5,9 +5,6 @@ namespace Artprima\WordPress\Ixa\Configuration;
 
 interface ConfigLoaderInterface
 {
-
-    function __construct($dir, $filename = null);
-
     /**
      * Load
      * Parse and save file into $this->params
